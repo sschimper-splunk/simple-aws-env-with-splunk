@@ -1,14 +1,14 @@
-output "url" {
+output "_1_url" {
   description = "Public IP address of the EC2 instance hosted in the public subnet of the VPC."
-  value       = "http://${module.ec2-instance.public_ip}:8000/"
+  value       = "http://${module.ec2-instance.public_ip}:8000/" #todo: change this to elastic IP address
 }
 
-output "username" {
+output "_2_username" {
   description = "Username to log in"
   value = "admin"
 }
 
-output "password" {
+output "_3_password" {
   description = "Password to log in"
   value = "SPLUNK-${module.ec2-instance.id}"
 }

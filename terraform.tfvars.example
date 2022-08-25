@@ -1,0 +1,4 @@
+## AWS Authentication Settings ##
+key_name              = "<my_aws_key>"
+aws_access_key_id     = "<XXXXXXXXXXXXXXXXXXX>"
+aws_secret_access_key = "<XXXXXXXXXXXXXXXXXXX>"
