@@ -1,13 +1,12 @@
 #######################
-# Terraform Providers #
+# Terraform Provider  #
 #######################
 
 provider "aws" {
-  region     = lookup(var.available_aws_regions, var.chosen_aws_region)
+  region     = lookup(var.selected_aws_region, var.available_aws_regions)
   access_key = var.aws_access_key_id
   secret_key = var.aws_secret_access_key
 }
-
 
 
 ######################
@@ -20,19 +19,18 @@ module "vpc" {
   version = "3.14.2"
 
   name = var.vpc_name
-  cidr = "10.0.0.0/16"
+  cidr = "10.0.0.0/16" # harcoded for now
 
-  azs             = ["${var.chosen_aws_region}a"]
-  private_subnets = ["10.0.1.0/24"]
-  public_subnets  = ["10.0.101.0/24"]
-
-  # enable_ipv6 = true
-
-  # enable_nat_gateway = false
-  # single_nat_gateway = true
+  azs             = ["${lookup(var.selected_aws_region, var.available_aws_regions)}a"]
+  private_subnets = ["10.0.1.0/24"]   # harcoded for now
+  public_subnets  = ["10.0.101.0/24"] # harcoded for now
 
   public_subnet_tags = {
-    Name = "overridden-name-public"
+    Name = "${var.vpc_name}-public-subnet"
+  }
+
+  private_subnet_tags = {
+    Name = "${var.vpc_name}-private-subnet"
   }
 
   tags = {
@@ -41,31 +39,44 @@ module "vpc" {
   }
 
   vpc_tags = {
-    Name = "vpc-name"
+    Name = var.vpc_name
   }
 }
 
-# EC2 Instance 
+# Security Group
+module "security-group" {
+  source  = "terraform-aws-modules/security-group/aws"
+  version = "4.13.0"
+
+  name        = "${var.vpc_name}-security-group"
+  description = "Open ports are 8000 (Splunk Web), 22 (SSH), and 443 (SSL/HTTPS)."
+  vpc_id      = module.vpc.vpc_id
+}
+
+# EC2 Instance
 module "ec2-instance" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "4.1.4"
 
-  depends_on = [
-    module.vpc
-  ]
-
-  name = "single-instance"
-
-  ami                    = "ami-ebd02392"
-  instance_type          = var.ec2_instance_type
-  key_name               = "user1"
+  name                   = "${var.vpc_name}-ec2-instance"
+  ami                    = "ami-036905505de15fea5" # "Splunk Enterprise" AMI ID
+  instance_type          = lookup(var.available_ec2_instance_types, var.selected_ec2_instance_type)
+  key_name               = var.key_name
   monitoring             = false
-  # vpc_security_group_ids = ["sg-12345678"]
+  vpc_security_group_ids = [module.security-group.security_group_id]
   subnet_id              = module.vpc.public_subnets[0]
+
+  root_block_device = [
+    {
+      encrypted   = true
+      volume_type = "gp3"
+      throughput  = 200
+      volume_size = tostring(var.root_block_volume_size)
+    }
+  ]
 
   tags = {
     Terraform   = "true"
     Environment = "dev"
   }
-  
 }

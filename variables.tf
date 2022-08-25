@@ -19,11 +19,11 @@ variable "vpc_name" {
   # default = []
 }
 
-variable "chosen_aws_region" {
-  description = "Please select an AZ (1:eu-west-1, 2:eu-west-3, 3:eu-central-1, 4:us-east-1, 5:us-east-2, 6:us-west-1, 7:us-west-2, 8:ap-southeast-1, 9:ap-southeast-2, 10:sa-east-1)"
+variable "available_aws_regions" {
+  description = "Please select an AZ: (1:eu-west-1, 2:eu-west-3, 3:eu-central-1, 4:us-east-1, 5:us-east-2, 6:us-west-1, 7:us-west-2, 8:ap-southeast-1, 9:ap-southeast-2, 10:sa-east-1)"
 }
 
-variable "available_aws_regions" {
+variable "selected_aws_region" {
   description = "Provide the desired region"
   default = {
     "1"  = "eu-west-1"
@@ -39,18 +39,22 @@ variable "available_aws_regions" {
   }
 }
 
-variable "ec2_instance_type" {
-  description = "Please select an EC2 instance type (1:t2.micro, 2:t2.small, 3:t2.medium, 4:t2.large, 5:t2.xlarge, 6:t2.2xlarge)"
+variable "selected_ec2_instance_type" {
+  description = "Please select an EC2 instance type: (1:t2.micro, 2:t2.small, 3:t2.medium, 4:t2.large, 5:t2.xlarge, 6:t2.2xlarge)"
 }
 
 variable "available_ec2_instance_types" {
   description = "Provide the desired EC2 instance type"
   default = {
-    "1"  = "t2.micro"
-    "2"  = "t2.small"
-    "3"  = "t2.medium"
-    "4"  = "t2.large"
-    "5"  = "t2.xlarge"
-    "6"  = "t2.2xlarge"
+    "1" = "t2.micro"
+    "2" = "t2.small"
+    "3" = "t2.medium"
+    "4" = "t2.large"
+    "5" = "t2.xlarge"
+    "6" = "t2.2xlarge"
   }
+}
+
+variable "root_block_volume_size" {
+  description = "Please enter a number for the EC2 instance volume size in GiB: "
 }
