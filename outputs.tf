@@ -3,6 +3,13 @@ output "_1_url" {
   value       = "http://${aws_eip.eip.public_ip}:8000/"
 }
 
+/*
+output "public_dns" {
+  description = "The public DNS name assigned to the instance. For EC2-VPC, this is only available if you've enabled DNS hostnames for your VPC"
+  value       = module.ec2-instance.public_dns
+}
+*/
+
 output "_2_username" {
   description = "Username to log in"
   value       = "admin"

@@ -8,6 +8,14 @@ provider "aws" {
   secret_key = var.aws_secret_access_key
 }
 
+/*
+provider "splunk" {
+  url                  = "prd-p-wtpxx.splunkcloud.com"
+  username             = "test_user"
+  password             = "wert1234"
+  insecure_skip_verify = true
+}
+*/
 
 ######################
 # AWS Infrastructure #
@@ -20,6 +28,8 @@ module "vpc" {
 
   name = var.vpc_name
   cidr = "10.0.0.0/16" # harcoded for now
+
+  enable_dns_hostnames = true
 
   azs             = ["${lookup(var.selected_aws_region, var.available_aws_regions)}a"]
   private_subnets = ["10.0.1.0/24"]   # harcoded for now
@@ -60,7 +70,7 @@ resource "aws_security_group_rule" "outbound" {
   security_group_id = aws_security_group.poc_security_group.id
 }
 
-# Security Group Inbound Rule - SSH
+# Security Group Inbound Rule - Port 22 SSH
 resource "aws_security_group_rule" "in_ssh" {
   type              = "ingress"
   from_port         = 22
@@ -80,8 +90,17 @@ resource "aws_security_group_rule" "in_8000" {
   security_group_id = aws_security_group.poc_security_group.id
 }
 
+# Security Group Inbound Rule - Port 80 HTTP
+resource "aws_security_group_rule" "in_http" {
+  type              = "ingress"
+  from_port         = 80
+  to_port           = 80
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.poc_security_group.id
+}
 
-# Security Group Inbound Rule - HTTPS
+# Security Group Inbound Rule - Port 443 HTTPS
 resource "aws_security_group_rule" "in_https" {
   type              = "ingress"
   from_port         = 443
