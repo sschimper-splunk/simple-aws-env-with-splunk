@@ -148,3 +148,40 @@ resource "aws_eip" "eip" {
     Name = "${var.vpc_name}-eip"
   }
 }
+
+######################
+# SSL Certificate    #
+######################
+
+module "ssm-tls-self-signed-cert" {
+  source  = "cloudposse/ssm-tls-self-signed-cert/aws"
+  version = "1.0.0"
+  # insert the 1 required variable here
+
+  # namespace = "eg"
+  # stage     = "dev"
+  name      = "self-signed-cert"
+
+  subject = {
+    common_name         = "Automated-POC"
+    organization        = "Splunk"
+    organizational_unit = "GSS"
+  }
+
+  validity = {
+    duration_hours      = 730
+    early_renewal_hours = 24
+  }
+
+  allowed_uses = [
+    "key_encipherment",
+    "digital_signature",
+    "server_auth"
+  ]
+
+  subject_alt_names = {
+    ip_addresses = ["${aws_eip.eip.public_ip}"]
+    dns_names    = ["${module.ec2-instance.public_dns}"]
+    uris         = ["https://${module.ec2-instance.public_dns}"]
+  }
+}

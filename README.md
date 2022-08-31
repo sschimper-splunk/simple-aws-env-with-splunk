@@ -1,4 +1,4 @@
-# Splunk POC Automation with Terraform
+# Splunk GSS Lab Automation Project - GitHub Pages URL
 
 Todo
 
