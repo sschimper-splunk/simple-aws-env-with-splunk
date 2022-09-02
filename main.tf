@@ -22,53 +22,6 @@ provider "splunk" {
 
 */
 
-######################
-# SSL Certificate    #
-######################
-
-# Code taken from the example posted here: 
-# https://registry.terraform.io/providers/hashicorp/tls/latest/docs
-
-# This example creates a self-signed certificate,
-# and uses it to create an AWS IAM Server certificate.
-#
-# THIS IS NOT RECOMMENDED FOR PRODUCTION SERVICES.
-# See the detailed documentation of each resource for further
-# security considerations and other practical tradeoffs.
-
-resource "tls_private_key" "tls_key" {
-  algorithm = "ECDSA"
-}
-
-resource "tls_self_signed_cert" "certificate" {
-  # key_algorithm   = tls_private_key.tls_key.algorithm
-  private_key_pem = tls_private_key.tls_key.private_key_pem
-
-  # Certificate expires after 720 hours/30 days.
-  validity_period_hours = 720
-
-  # Reasonable set of uses for a server SSL certificate.
-  allowed_uses = [
-    "key_encipherment",
-    "digital_signature",
-    "server_auth",
-  ]
-
-  dns_names = ["${aws_eip.eip.public_ip}", "${module.ec2-instance.public_dns}"]
-
-  subject {
-    common_name  = "Auto-POC"
-    organization = "Splunk"
-  }
-}
-
-resource "aws_iam_server_certificate" "iam_server_certificate" {
-  name             = "${var.vpc_name}_self_signed_cert"
-  certificate_body = tls_self_signed_cert.certificate.cert_pem
-  private_key      = tls_private_key.tls_key.private_key_pem
-}
-
-
 
 ######################
 # AWS Infrastructure #
@@ -205,4 +158,51 @@ resource "aws_eip" "eip" {
   tags = {
     Name = "${var.vpc_name}-eip"
   }
+}
+
+######################
+# SSL Certificate    #
+######################
+
+# Code taken from the example posted here: 
+# https://registry.terraform.io/providers/hashicorp/tls/latest/docs
+
+# This example creates a self-signed certificate,
+# and uses it to create an AWS IAM Server certificate.
+#
+# THIS IS NOT RECOMMENDED FOR PRODUCTION SERVICES.
+# See the detailed documentation of each resource for further
+# security considerations and other practical tradeoffs.
+
+resource "tls_private_key" "tls_key" {
+  algorithm = "ECDSA"
+}
+
+resource "tls_self_signed_cert" "certificate" {
+  private_key_pem = tls_private_key.tls_key.private_key_pem
+
+  # Certificate expires after 720 hours/30 days.
+  validity_period_hours = 720
+
+  # Reasonable set of uses for a server SSL certificate.
+  allowed_uses = [
+    "key_encipherment",
+    "digital_signature",
+    "server_auth",
+  ]
+
+  # Note to self: Dunno if this is correct, but seems to work at least for public ip address
+  dns_names = ["${aws_eip.eip.public_ip}", "${module.ec2-instance.public_dns}"]
+
+  subject {
+    common_name  = "Auto-POC"
+    organization = "Splunk"
+  }
+}
+
+# Register certifiacte with AWS AMI 
+resource "aws_iam_server_certificate" "iam_server_certificate" {
+  name             = "${var.vpc_name}_self_signed_cert"
+  certificate_body = tls_self_signed_cert.certificate.cert_pem
+  private_key      = tls_private_key.tls_key.private_key_pem
 }
