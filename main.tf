@@ -8,6 +8,10 @@ provider "aws" {
   secret_key = var.aws_secret_access_key
 }
 
+provider "tls" {
+
+}
+
 /*
 provider "splunk" {
   url                  = "prd-p-wtpxx.splunkcloud.com"
@@ -15,7 +19,56 @@ provider "splunk" {
   password             = "wert1234"
   insecure_skip_verify = true
 }
+
 */
+
+######################
+# SSL Certificate    #
+######################
+
+# Code taken from the example posted here: 
+# https://registry.terraform.io/providers/hashicorp/tls/latest/docs
+
+# This example creates a self-signed certificate,
+# and uses it to create an AWS IAM Server certificate.
+#
+# THIS IS NOT RECOMMENDED FOR PRODUCTION SERVICES.
+# See the detailed documentation of each resource for further
+# security considerations and other practical tradeoffs.
+
+resource "tls_private_key" "tls_key" {
+  algorithm = "ECDSA"
+}
+
+resource "tls_self_signed_cert" "certificate" {
+  # key_algorithm   = tls_private_key.tls_key.algorithm
+  private_key_pem = tls_private_key.tls_key.private_key_pem
+
+  # Certificate expires after 720 hours/30 days.
+  validity_period_hours = 720
+
+  # Reasonable set of uses for a server SSL certificate.
+  allowed_uses = [
+    "key_encipherment",
+    "digital_signature",
+    "server_auth",
+  ]
+
+  dns_names = ["${aws_eip.eip.public_ip}", "${module.ec2-instance.public_dns}"]
+
+  subject {
+    common_name  = "Auto-POC"
+    organization = "Splunk"
+  }
+}
+
+resource "aws_iam_server_certificate" "iam_server_certificate" {
+  name             = "${var.vpc_name}_self_signed_cert"
+  certificate_body = tls_self_signed_cert.certificate.cert_pem
+  private_key      = tls_private_key.tls_key.private_key_pem
+}
+
+
 
 ######################
 # AWS Infrastructure #
@@ -31,6 +84,7 @@ module "vpc" {
 
   enable_dns_hostnames = true
 
+  # Deployment of two subnets (one public and one private) in the AZ specified by the user
   azs             = ["${lookup(var.selected_aws_region, var.available_aws_regions)}a"]
   private_subnets = ["10.0.1.0/24"]   # harcoded for now
   public_subnets  = ["10.0.101.0/24"] # harcoded for now
@@ -116,8 +170,9 @@ module "ec2-instance" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "4.1.4"
 
-  name                   = "${var.vpc_name}-ec2-instance"
-  ami                    = "ami-036905505de15fea5" # "Splunk Enterprise" AMI ID
+  name = "${var.vpc_name}-ec2-instance"
+  # ami                    = "ami-036905505de15fea5" # "Splunk Enterprise" AMI ID
+  ami                    = "ami-09e2d756e7d78558d" # Amazon Linux 2 Kernel 5.10 AMI 2.0.20220805.0 x86_64 HVM gp2
   instance_type          = lookup(var.available_ec2_instance_types, var.selected_ec2_instance_type)
   key_name               = var.key_name
   monitoring             = false
@@ -137,6 +192,9 @@ module "ec2-instance" {
     Terraform   = "true"
     Environment = "dev"
   }
+
+  # debug
+  user_data = file("./test_bootstrap.sh")
 }
 
 # Elastic IP Address
@@ -146,42 +204,5 @@ resource "aws_eip" "eip" {
 
   tags = {
     Name = "${var.vpc_name}-eip"
-  }
-}
-
-######################
-# SSL Certificate    #
-######################
-
-module "ssm-tls-self-signed-cert" {
-  source  = "cloudposse/ssm-tls-self-signed-cert/aws"
-  version = "1.0.0"
-  # insert the 1 required variable here
-
-  # namespace = "eg"
-  # stage     = "dev"
-  name      = "self-signed-cert"
-
-  subject = {
-    common_name         = "Automated-POC"
-    organization        = "Splunk"
-    organizational_unit = "GSS"
-  }
-
-  validity = {
-    duration_hours      = 730
-    early_renewal_hours = 24
-  }
-
-  allowed_uses = [
-    "key_encipherment",
-    "digital_signature",
-    "server_auth"
-  ]
-
-  subject_alt_names = {
-    ip_addresses = ["${aws_eip.eip.public_ip}"]
-    dns_names    = ["${module.ec2-instance.public_dns}"]
-    uris         = ["https://${module.ec2-instance.public_dns}"]
   }
 }
