@@ -8,20 +8,12 @@ provider "aws" {
   secret_key = var.aws_secret_access_key
 }
 
-provider "tls" {
-
-}
-
-/*
 provider "splunk" {
-  url                  = "prd-p-wtpxx.splunkcloud.com"
-  username             = "test_user"
-  password             = "wert1234"
+  url                  = "https://${aws_eip.eip.public_ip}:8000/"
+  username             = "admin"
+  password             = "SPLUNK-${module.ec2-instance.id}"
   insecure_skip_verify = true
 }
-
-*/
-
 
 ######################
 # AWS Infrastructure #
@@ -124,8 +116,8 @@ module "ec2-instance" {
   version = "4.1.4"
 
   name = "${var.vpc_name}-ec2-instance"
-  # ami                    = "ami-036905505de15fea5" # "Splunk Enterprise" AMI ID
-  ami                    = "ami-09e2d756e7d78558d" # Amazon Linux 2 Kernel 5.10 AMI 2.0.20220805.0 x86_64 HVM gp2
+  ami  = "ami-036905505de15fea5" # "Splunk Enterprise" AMI ID
+  # ami                    = "ami-09e2d756e7d78558d" # Amazon Linux 2 Kernel 5.10 AMI 2.0.20220805.0 x86_64 HVM gp2
   instance_type          = lookup(var.available_ec2_instance_types, var.selected_ec2_instance_type)
   key_name               = var.key_name
   monitoring             = false
@@ -146,8 +138,8 @@ module "ec2-instance" {
     Environment = "dev"
   }
 
-  # debug
-  user_data = file("./test_bootstrap.sh")
+  # Set up Splunk for SSL
+  user_data = file("./enableSplunkWebSSL.sh")
 }
 
 # Elastic IP Address
