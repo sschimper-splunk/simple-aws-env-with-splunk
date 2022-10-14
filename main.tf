@@ -8,13 +8,6 @@ provider "aws" {
   secret_key = var.aws_secret_access_key
 }
 
-provider "splunk" {
-  url                  = "https://${aws_eip.eip.public_ip}:8000/"
-  username             = "admin"
-  password             = "SPLUNK-${module.ec2-instance.id}"
-  insecure_skip_verify = true
-}
-
 ######################
 # AWS Infrastructure #
 ######################
@@ -115,9 +108,8 @@ module "ec2-instance" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "4.1.4"
 
-  name = "${var.vpc_name}-ec2-instance"
-  ami  = "ami-036905505de15fea5" # "Splunk Enterprise" AMI ID
-  # ami                    = "ami-09e2d756e7d78558d" # Amazon Linux 2 Kernel 5.10 AMI 2.0.20220805.0 x86_64 HVM gp2
+  name                   = "${var.vpc_name}-ec2-instance"
+  ami                    = "ami-036905505de15fea5" # debug # "Splunk Enterprise" AMI ID
   instance_type          = lookup(var.available_ec2_instance_types, var.selected_ec2_instance_type)
   key_name               = var.key_name
   monitoring             = false
@@ -139,7 +131,7 @@ module "ec2-instance" {
   }
 
   # Set up Splunk for SSL
-  user_data = file("./enableSplunkWebSSL.sh")
+  # user_data = file("./enableSplunkWebSSL.sh")
 }
 
 # Elastic IP Address
@@ -151,6 +143,8 @@ resource "aws_eip" "eip" {
     Name = "${var.vpc_name}-eip"
   }
 }
+
+/*
 
 ######################
 # SSL Certificate    #
@@ -166,6 +160,7 @@ resource "aws_eip" "eip" {
 # See the detailed documentation of each resource for further
 # security considerations and other practical tradeoffs.
 
+/*
 resource "tls_private_key" "tls_key" {
   algorithm = "ECDSA"
 }
@@ -198,3 +193,4 @@ resource "aws_iam_server_certificate" "iam_server_certificate" {
   certificate_body = tls_self_signed_cert.certificate.cert_pem
   private_key      = tls_private_key.tls_key.private_key_pem
 }
+*/

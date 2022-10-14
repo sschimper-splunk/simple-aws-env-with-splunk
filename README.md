@@ -1,6 +1,6 @@
-# Splunk GSS Lab Automation Project - GitHub Pages URL
+# Simple AWS Environment with Splunk installed
 
-Todo
+[TODO] I still need to write the docs ...
 
 ## Prerequisites
 - An AWS account.
