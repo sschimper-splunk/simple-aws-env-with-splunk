@@ -10,7 +10,7 @@ allows all outbound traffic and inbound traffic for ports 22, 80, 443, and 8000.
 
 ## Prerequisites
 - An AWS account.
-- An AWS Marketplace subscription for the Splunk Enterprise AMI (If you don't have that yet, don't worry, I will walk you through the process in the **Start up the environment** section).
+- An AWS Marketplace subscription for the Splunk Enterprise AMI (If you don't have that yet, don't worry, I will briefly mention what to do in the *Special case* part of the  **Start up the environment** section).
 - A public key for AWS EC2.
 
 ## Set Up
