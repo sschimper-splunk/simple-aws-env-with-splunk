@@ -77,7 +77,7 @@ If you have run the *init* command in the past and want to update the downloaded
 ### Create an execution plan (optional)
 You can create an execution plan. This does not actually perform anything, it is only a way
 for Terraform to, well, create a plan when the time comes when we are going to interact with the real AWS infrastructure.
-For you it can be useful as a feedback of all the interaction Terraform is going to apply. 
+For you it can be useful as a feedback of all the changes Terraform is going to apply. 
 Here is the command:
 
 ```console
