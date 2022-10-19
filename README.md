@@ -101,6 +101,13 @@ If you are impatient (like me), you can skip this confirmation by adding the fol
 ~$ terraform apply --auto-approve
 ```
 
+As soon as the process finishes, you are presented with the EC2 Splunk URL, a username, and a password.
+During the deployment of the AWS infrastrucutre, you can always output this information with:
+
+```console
+~$ terraform output
+```
+
 #### Special case
 If you haven't yet subscribed for the WS Marketplace subscription for the Splunk Enterprise AMI, you will
 be most likely greeted with an Error message like this:
@@ -111,14 +118,6 @@ This means that the environment is up and running, except for the EC2 instance w
 case please spin down the remaining resources with the *destroy* command shown in the **Shut down the environment**
 section, follow the link in the error message, sign up for the Splunk AMI in the AWS console, and perform
 the *appy* command again.
-
-
-As soon as the process finishes, you are presented with the EC2 Splunk URL, a username, and a password.
-During the deployment of the AWS infrastrucutre, you can always output this information with:
-
-```console
-~$ terraform output
-```
 
 ## Shut down the environment
 
