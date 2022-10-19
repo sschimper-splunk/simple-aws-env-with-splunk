@@ -15,7 +15,7 @@ allows all outbound traffic and inbound traffic for ports 22, 80, 443, and 8000.
 
 ## Set Up
 Clone this repository to a convenient location on your file system and in a terminal navigate to the root level of it.
-Copy the 'terraform.tfvars.example' and remove the '.example' extension from the copy.
+Copy the *terraform.tfvars.example* and remove the '.example' extension from the copy.
 
 ```console
 ~$ cp terraform.tfvars.example terraform.tfvars
