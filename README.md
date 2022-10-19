@@ -21,7 +21,7 @@ Copy the 'terraform.tfvars.example' and remove the '.example' extension from the
 ~$ cp terraform.tfvars.example terraform.tfvars
 ```
 
-In the now 'terraform.tfvars' edit the variables:
+In the now *terraform.tfvars* edit the variables:
 
 - Set 'aws_access_key_id' and 'aws_secret_access_key' according to your own Access Key that is connected to your AWS user.
 - For the EC2 instance, create a key, either with OpenSSL or via the AWS GUI, and set 'key_name' to the name you gave that key.
