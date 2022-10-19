@@ -7,7 +7,7 @@ key_name              = "<my_aws_key>"
 ## AWS Infrastructure Settings ##
 
 # VPC Name 
-vpc_name = "vpc-poc-test"
+vpc_name = "my-vpc"
 
 /*
 Please select an AZ: 

@@ -4,6 +4,7 @@
 
 ## Prerequisites
 - An AWS account.
+- A public key for AWS EC2
 
 ## Set Up
 Copy the 'terraform.tfvars.example' and remove the '.example' extension from the copy.

@@ -109,7 +109,7 @@ module "ec2-instance" {
   version = "4.1.4"
 
   name                   = "${var.vpc_name}-ec2-instance"
-  ami                    = "ami-036905505de15fea5" # debug # "Splunk Enterprise" AMI ID
+  ami                    = "ami-036905505de15fea5" # "Splunk Enterprise" AMI ID
   instance_type          = lookup(var.available_ec2_instance_types, var.selected_ec2_instance_type)
   key_name               = var.key_name
   monitoring             = false
