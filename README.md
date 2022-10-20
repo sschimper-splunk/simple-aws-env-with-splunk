@@ -102,6 +102,9 @@ If you are impatient (like me), you can skip this confirmation by adding the fol
 ```
 
 As soon as the process finishes, you are presented with the EC2 Splunk URL, a username, and a password.
+Please wait ~5 minutes for the link to work, it should work as soon as the EC2 instance checks are finished.
+
+
 During the deployment of the AWS infrastrucutre, you can always output this information with:
 
 ```console
