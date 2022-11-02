@@ -102,7 +102,6 @@ resource "aws_security_group_rule" "in_https" {
   security_group_id = aws_security_group.poc_security_group.id
 }
 
-
 # EC2 Instance
 module "ec2-instance" {
   source  = "terraform-aws-modules/ec2-instance/aws"
