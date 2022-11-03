@@ -8,13 +8,33 @@ allows all outbound traffic and inbound traffic for ports 22, 80, 443, and 8000.
 
 <span style="color:red">**Important information** *(stand October 19, 2022)*:</span> Please don't use this AWS environment with Splunk instance to process sensible data. I did not (yet) implement the necessary security mechanisms and install the necessary certificates. The connection to the Splunk Search head is via HTTP by default, however, this can be toggled to HTTPS in the Splunk Server Settings. 
 
+For deploying an EC2 instance with a **Splunk SOAR** AMI, you can find the Terraform configuration files on the *soar* branch. The process for executing these scripts is identical to the process of executing the scripts for a Splunk Enterprise AMI. Only the input variables for the EC2 instance type and storage have been pre-set to *m5.xlarge* and *200GiB*, since Splunk SOAR doesn't work well with smaller instance types and storage.
+
 ## Prerequisites
 - An AWS account.
 - An AWS Marketplace subscription for the Splunk Enterprise AMI (If you don't have that yet, don't worry, I will briefly mention what to do in the *Special case* part of the  **Start up the environment** section).
 - A public key for AWS EC2.
 
 ## Set Up
-Clone this repository to a convenient location on your file system and in a terminal navigate to the root level of it.
+Fire up a terminal, navigate to a convenient location on your file system, and clone this repository:
+```console
+~$ git clone https://github.com/sschimper-splunk/simple-aws-env-with-splunk.git
+```
+Navigate to the root level of the repository. 
+
+**_NOTE ABOUT SOAR:_**  If you want to deploy Splunk SOAR instead of Enterprise, change to the git branch called *soar*:
+```console
+~$ git switch soar
+```
+
+Verify that you are on the correct branch with:
+```console
+~$ git branch
+```
+and type *q* to quit out of the view.
+
+**_NOTE ABOUT SOAR END_** 
+
 Copy the *terraform.tfvars.example* and remove the '.example' extension from the copy.
 
 ```console
