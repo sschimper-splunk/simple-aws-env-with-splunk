@@ -40,24 +40,12 @@ variable "selected_aws_region" {
   }
 }
 
-variable "selected_ec2_instance_type" {
-  # description = "Please select an EC2 instance type: (1:t2.micro, 2:t2.small, 3:t2.medium, 4:t2.large, 5:t2.xlarge, 6:t2.2xlarge)"
-  default = []
-}
-
-variable "available_ec2_instance_types" {
-  description = "Provide the desired EC2 instance type"
-  default = {
-    "1" = "t2.micro"
-    "2" = "t2.small"
-    "3" = "t2.medium"
-    "4" = "t2.large"
-    "5" = "t2.xlarge"
-    "6" = "t2.2xlarge"
-  }
+variable "ec2_instance_type" {
+  # description = "Provide the desired EC2 instance type"
+  default = "m5.xlarge"
 }
 
 variable "root_block_volume_size" {
   # description = "Please enter a number for the EC2 instance volume size in GiB: "
-  default = []
+  default = "200"
 }

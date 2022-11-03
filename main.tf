@@ -109,8 +109,8 @@ module "ec2-instance" {
   version = "4.1.4"
 
   name                   = "${var.vpc_name}-ec2-instance"
-  ami                    = "ami-036905505de15fea5" # "Splunk Enterprise" AMI ID
-  instance_type          = lookup(var.available_ec2_instance_types, var.selected_ec2_instance_type)
+  ami                    = "ami-0ed1862a48aa784ee" # "Splunk SOAR" AMI ID
+  instance_type          = var.ec2_instance_type
   key_name               = var.key_name
   monitoring             = false
   vpc_security_group_ids = [aws_security_group.poc_security_group.id]
