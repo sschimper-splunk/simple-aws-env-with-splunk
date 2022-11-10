@@ -17,3 +17,8 @@ output "_4_ssh_username" {
   description = "SSH username"
   value       = "phantom"
 }
+
+output "note_for_user" {
+  description = "User note"
+  value = "Please be patient, and allow the SOAR instance ~10 minutes to set up itself."
+}

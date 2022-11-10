@@ -102,6 +102,16 @@ resource "aws_security_group_rule" "in_https" {
   security_group_id = aws_security_group.poc_security_group.id
 }
 
+# Security Group Inbound Rule - Port 9999
+resource "aws_security_group_rule" "in_nine" {
+  type              = "ingress"
+  from_port         = 9999
+  to_port           = 9999
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.poc_security_group.id
+}
+
 
 # EC2 Instance
 module "ec2-instance" {
@@ -109,7 +119,7 @@ module "ec2-instance" {
   version = "4.1.4"
 
   name                   = "${var.vpc_name}-ec2-instance"
-  ami                    = "ami-0ed1862a48aa784ee" # "Splunk SOAR" AMI ID
+  ami                    = "ami-03fa9bf0e042d483d" # "Splunk SOAR" AMI ID
   instance_type          = var.ec2_instance_type
   key_name               = var.key_name
   monitoring             = false
