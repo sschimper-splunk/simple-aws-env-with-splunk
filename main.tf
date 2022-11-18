@@ -102,6 +102,16 @@ resource "aws_security_group_rule" "in_https" {
   security_group_id = aws_security_group.poc_security_group.id
 }
 
+# Security Group Inbound Rule - Port 9997 Splunk Recevier
+resource "aws_security_group_rule" "receiver" {
+  type              = "ingress"
+  from_port         = 9997
+  to_port           = 9997
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.poc_security_group.id
+}
+
 # EC2 Instance
 module "ec2-instance" {
   source  = "terraform-aws-modules/ec2-instance/aws"
