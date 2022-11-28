@@ -23,9 +23,11 @@ module "vpc" {
   enable_dns_hostnames = true
 
   # Deployment of two subnets (one public and one private) in the AZ specified by the user
-  azs             = ["${lookup(var.selected_aws_region, var.available_aws_regions)}a"]
-  private_subnets = ["10.0.1.0/24"]   # harcoded for now
-  public_subnets  = ["10.0.101.0/24"] # harcoded for now
+  azs = ["${lookup(var.selected_aws_region, var.available_aws_regions)}a",
+  "${lookup(var.selected_aws_region, var.available_aws_regions)}b"]
+
+  private_subnets = ["10.0.1.0/24", "10.0.2.0/24"]     # harcoded for now 
+  public_subnets  = ["10.0.101.0/24", "10.0.102.0/24"] # harcoded for now 
 
   public_subnet_tags = {
     Name = "${var.vpc_name}-public-subnet"
@@ -107,6 +109,26 @@ resource "aws_security_group_rule" "receiver" {
   type              = "ingress"
   from_port         = 9997
   to_port           = 9997
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.poc_security_group.id
+}
+
+# Security Group Inbound Rule - Port 8088 Splunk Recevier
+resource "aws_security_group_rule" "hev" {
+  type              = "ingress"
+  from_port         = 8088
+  to_port           = 8088
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.poc_security_group.id
+}
+
+# Security Group Inbound Rule - Port 8089 Splunk Recevier
+resource "aws_security_group_rule" "mngm" {
+  type              = "ingress"
+  from_port         = 8089
+  to_port           = 8089
   protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.poc_security_group.id
