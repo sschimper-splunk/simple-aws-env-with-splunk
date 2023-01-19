@@ -17,7 +17,7 @@ Please select an AZ:
 */
 available_aws_regions = "1"
 
-
+selected_ec2_instance_count = "1"
 
 # If you want to deploy Splunk Enterprise, please uncomment and set the following two variables below #
 

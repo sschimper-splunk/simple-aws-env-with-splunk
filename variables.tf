@@ -15,12 +15,12 @@ variable "key_name" {
 }
 
 variable "vpc_name" {
-  # description = "Please provide a name for the VPC. We recommend the following naming convention: customer-poc_type-sesr."
+  description = "Please provide a name for the VPC. We recommend the following naming convention: customer-poc_type-sesr."
   default = []
 }
 
 variable "available_aws_regions" {
-  # description = "Please select an AZ: (1:eu-west-1, 2:eu-west-3, 3:eu-central-1, 4:us-east-1, 5:us-east-2, 6:us-west-1, 7:us-west-2, 8:ap-southeast-1, 9:ap-southeast-2, 10:sa-east-1)"
+  description = "Please select an AZ: (1:eu-west-1, 2:eu-west-3, 3:eu-central-1, 4:us-east-1, 5:us-east-2, 6:us-west-1, 7:us-west-2, 8:ap-southeast-1, 9:ap-southeast-2, 10:sa-east-1)"
   default = []
 }
 
@@ -41,8 +41,13 @@ variable "selected_aws_region" {
   }
 }
 
+variable "selected_ec2_instance_count" {
+  description = "Please enter instance count: "
+  default = []
+}
+
 variable "selected_ec2_instance_type" {
-  # description = "Please select an EC2 instance type: (1:t2.micro, 2:t2.small, 3:t2.medium, 4:t2.large, 5:t2.xlarge, 6:t2.2xlarge)"
+  description = "Please select an EC2 instance type: (1:t2.micro, 2:t2.small, 3:t2.medium, 4:t2.large, 5:t2.xlarge, 6:t2.2xlarge)"
   default = []
 }
 
@@ -59,6 +64,6 @@ variable "available_ec2_instance_types" {
 }
 
 variable "root_block_volume_size" {
-  # description = "Please enter a number for the EC2 instance volume size in GiB: "
+  description = "Please enter a number for the EC2 instance volume size in GiB: "
   default = []
 }

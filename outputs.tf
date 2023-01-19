@@ -1,3 +1,4 @@
+/*
 output "_1_url" {
   description = "Public IP address of the EC2 instance hosted in the public subnet of the VPC."
   value       = "http://${aws_eip.eip.public_ip}:8000/"
@@ -12,3 +13,4 @@ output "_3_password" {
   description = "Password to log in"
   value       = "SPLUNK-${module.ec2-instance.id}"
 }
+*/

@@ -139,7 +139,9 @@ module "ec2-instance" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "4.1.4"
 
-  name                   = "${var.vpc_name}-ec2-instance"
+  count = var.selected_ec2_instance_count
+
+  name                   = "${var.vpc_name}-ec2-instance-${count.index}"
   ami                    = "ami-016bc88580c92f2fe" # "Splunk Enterprise" AMI ID
   instance_type          = lookup(var.available_ec2_instance_types, var.selected_ec2_instance_type)
   key_name               = var.key_name
@@ -165,6 +167,7 @@ module "ec2-instance" {
   # user_data = file("./enableSplunkWebSSL.sh")
 }
 
+/*
 # Elastic IP Address
 resource "aws_eip" "eip" {
   instance = module.ec2-instance.id
@@ -174,6 +177,7 @@ resource "aws_eip" "eip" {
     Name = "${var.vpc_name}-eip"
   }
 }
+*/
 
 /*
 
