@@ -37,6 +37,7 @@ variable "selected_aws_region" {
     "8"  = "ap-southeast-1"
     "9"  = "ap-southeast-2"
     "10" = "sa-east-1"
+    "11" = "eu-west-2"
   }
 }
 
