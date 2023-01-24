@@ -13,4 +13,15 @@ output "_3_password" {
   description = "Password to log in"
   value       = "SPLUNK-${module.ec2-instance.id}"
 }
+
+
+output "splunk_instances" {
+  value = "URL: http://${module.ec2-instance.*.public_ip}:8000/, Username: admin, Password: ${module.ec2-instance.*.id}"
+}
 */
+
+output "splunk_instances" {
+  value = [
+    for instance in module.ec2-instance : "URL: http://${instance.public_ip}:8000/, Username: admin, Password: ${instance.id}"
+  ]
+}
