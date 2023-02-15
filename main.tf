@@ -137,14 +137,13 @@ resource "aws_security_group_rule" "mngm" {
 # EC2 Instance
 module "ec2-instance" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "4.1.4"
+  version = "4.3.0"
 
   count = var.selected_ec2_instance_count
 
   name                   = "${var.vpc_name}-ec2-instance-${count.index}"
 
-  # Important! Splunk Enterprise AMI ID can change, and needs to be updated manually.
-  ami                    = "ami-016bc88580c92f2fe" # "Splunk Enterprise" AMI ID
+  # ami                    = "ami-016bc88580c92f2fe" # "Splunk Enterprise" AMI ID
   instance_type          = lookup(var.available_ec2_instance_types, var.selected_ec2_instance_type)
   key_name               = var.key_name
   monitoring             = false
@@ -164,9 +163,10 @@ module "ec2-instance" {
     Terraform   = "true"
     Environment = "dev"
   }
-
+  
   # Set up Splunk for SSL
-  user_data = file("./my_script.sh")
+  user_data = file("./bootstrap.sh")
+
 }
 
 /*
